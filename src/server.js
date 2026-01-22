@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./db/dbConnection.js";
 import furnitureRoutes from "./routes/furniture.js";
+import userRoutes from "./routes/user.js";
 // create an instance of express application
 const app = express();
 
@@ -18,8 +19,9 @@ app.get("/", (req, res) => {
   res.send("Welcome to Furniro Server");
 });
 
-//define furniture routes
+//define routes
 app.use("/api/furniture", furnitureRoutes);
+app.use("/api/user", userRoutes);
 
 const startSever = async () => {
   try {

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const furnitureSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    images: { type: [String] },
+    images: { type: [String], required: true },
     price: { type: Number, required: true },
     tags: { type: [String], default: [] },
     category: { type: String, required: true },
@@ -14,7 +14,7 @@ const furnitureSchema = new mongoose.Schema(
     quantity: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 //register  furniture as a mongoose model
 const Furniture = mongoose.model("Furniture", furnitureSchema);
