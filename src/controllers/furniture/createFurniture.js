@@ -4,7 +4,6 @@ import httpStatus from "http-status";
 // function to create a new furniture item
 export const createFurniture = async (req, res) => {
   try {
-    //step 1: destructure furniture details from request body
     const {
       name,
       price,
@@ -16,32 +15,39 @@ export const createFurniture = async (req, res) => {
       inStock,
       quantity,
       discount,
-    } = req.body;
+    } = req.body || {};
 
-    //step 2: check if furniture with the same name already exists
-    const existingFurniture = await Furniture.findOne({ name });
-    if (existingFurniture) {
-      return res.status(httpStatus.CONFLICT).json({
+    if (!name || !price) {
+      return res.status(400).json({
         status: "Error",
-        message: "Furniture with the same name already exists.",
+        message: "Name and price are required",
       });
     }
 
-    //step 3: create a new furniture item
+    const images = req.files ? req.files.map((file) => file.filename) : [];
+
+    const existingFurniture = await Furniture.findOne({ name });
+    if (existingFurniture) {
+      return res.status(409).json({
+        status: "Error",
+        message: "Furniture with the same name already exists",
+      });
+    }
+
     const newFurniture = await Furniture.create({
-      name: name,
-      price: price,
-      tags: tags,
-      category: category,
-      description: description,
-      size: size,
-      color: color,
-      inStock: inStock,
-      quantity: quantity,
-      discount: discount,
+      name,
+      images,
+      price,
+      tags,
+      category,
+      description,
+      size,
+      color,
+      inStock,
+      quantity,
+      discount,
     });
 
-    //step 4: send response back to client
     return res.status(httpStatus.CREATED).json({
       status: "Success",
       message: "Furniture created successfully",
