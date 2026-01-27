@@ -3,11 +3,16 @@ import dotenv from "dotenv";
 import { connectDB } from "./db/dbConnection.js";
 import furnitureRoutes from "./routes/furniture.js";
 import userRoutes from "./routes/user.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 // create an instance of express application
 const app = express();
 
 // middleware to parse json data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // configure dotenv
 dotenv.config();
 
@@ -18,6 +23,18 @@ const PORT = process.env.PORT;
 app.get("/", (req, res) => {
   res.send("Welcome to Furniro Server");
 });
+
+//configure server to serve static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+//configure uploads via env variable(for the use of Render disk mount path feature when in production)
+const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(__dirname, "uploads");
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+app.use("/uploads", express.static(UPLOADS_DIR));
 
 //define routes
 app.use("/api/furniture", furnitureRoutes);
