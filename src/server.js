@@ -6,13 +6,14 @@ import userRoutes from "./routes/user.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import cors from "cors";
 // create an instance of express application
 const app = express();
 
 // middleware to parse json data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
 // configure dotenv
 dotenv.config();
 
