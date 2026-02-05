@@ -31,6 +31,8 @@ export const registerUser = async (req, res) => {
     await newUser.save();
     //Step 4: Send a success response
     return res.status(httpStatus.CREATED).json({
+      statusCode: httpStatus.CREATED,
+      status: "success",
       message: "User registered successfully.",
       data: newUser,
     });
